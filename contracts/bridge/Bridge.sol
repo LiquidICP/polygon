@@ -5,9 +5,7 @@ import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
 import "../interfaces/IBridge.sol";
 import "../interfaces/IWrapperBridgedStandardERC20.sol";
-// добавить изменяемую комиссию
-// добавить соотношение кошельков
-// проработать взятие комиссии
+
 contract Bridge is AccessControl, IBridge {
     using SafeERC20 for IERC20;
 
