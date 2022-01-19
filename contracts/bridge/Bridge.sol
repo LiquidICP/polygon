@@ -19,8 +19,6 @@ contract Bridge is AccessControl, IBridge {
     IWrappedInternetComputerToken public iWrappedInternetComputerToken;
 
     mapping(address => bool) public allowedTokens;
-
-//    bytes32 public constant ICP_ADDRESS = "";
 //
 //    mapping (byte32 => address) relatedTokens;
 
@@ -112,6 +110,28 @@ contract Bridge is AccessControl, IBridge {
         }
         iWrappedInternetComputerToken(tokenAtEnd).mint(_to, _amount);
         emit BridgingToEndPerformed(_tokenAtStart, tokenAtEnd, _to, _amount);
+    }
+
+    function _cloneAndInitializeTokenAtEndForTokenAtStart(
+        address _tokenAtStart,
+        string memory _name,
+        string memory _symbol
+    )
+    internal
+    returns(address tokenAtEnd)
+    {
+        tokenAtEnd = address(bridgedStandartERC20).clone();
+        tokenPairs.push(Pair({
+        tokenAtStart: _tokenAtStart,
+        tokenAtEnd: tokenAtEnd
+        }));
+        allowedTokens[tokenAtEnd] = true;
+        IWrapperBridgedStandardERC20(tokenAtEnd).configure(
+            address(this),
+            _tokenAtStart,
+            _name,
+            _symbol
+        );
     }
 
 }
