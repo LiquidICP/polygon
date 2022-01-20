@@ -4,7 +4,6 @@ import "@openzeppelin/contracts/proxy/utils/Initializable.sol";
 import { ERC20 } from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-import "./interfaces/IBridgedStandardERC20.sol";
 import "./interfaces/IWrapperBridgedStandardERC20.sol";
 
 contract WrapperBridgedStandardERC20 is IWrapperBridgedStandardERC20, ERC20, Initializable {
