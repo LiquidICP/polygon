@@ -5,8 +5,8 @@ import "@openzeppelin/contracts/proxy/Clones.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
-import "../interfaces/IBridge.sol";
-import "../interfaces/IWrapperBridgedStandardERC20.sol";
+import "./IBridge.sol";
+import "./IWrapperBridgedStandardERC20.sol";
 
 contract Bridge is AccessControl, IBridge {
     using SafeERC20 for IERC20;
