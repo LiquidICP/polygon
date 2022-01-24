@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/access/AccessControl.sol";
@@ -5,8 +7,8 @@ import "@openzeppelin/contracts/proxy/Clones.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
-import "./IBridge.sol";
-import "./IWrapperBridgedStandardERC20.sol";
+import "../interfaces/IBridge.sol";
+import "../interfaces/IWrapperBridgedStandardERC20.sol";
 
 contract Bridge is AccessControl, IBridge {
     using SafeERC20 for IERC20;
@@ -109,7 +111,7 @@ contract Bridge is AccessControl, IBridge {
     internal
     returns(address token)
     {
-        address _token = Clones.clone(address(iWrapperBridgedStandardERC20));
+        address _token = address(iWrapperBridgedStandardERC20).clone();
         IWrapperBridgedStandardERC20(_token).configure(
             address(this),
             _token,

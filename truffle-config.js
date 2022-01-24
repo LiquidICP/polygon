@@ -17,7 +17,7 @@
  * phrase from a file you've .gitignored so it doesn't accidentally become public.
  *
  */
-
+require('dotenv').config();
 const HDWalletProvider = require('@truffle/hdwallet-provider');
 const fs = require('fs');
 
@@ -30,13 +30,40 @@ const ganacheConfig = {
 module.exports = {
 
   networks: {
-    matic_testnet: {
-      provider: () => new HDWalletProvider(mnemonic, `https://rpc-mumbai.maticvigil.com`),
+    development: ganacheConfig,
+    polygon_testnet_fork: ganacheConfig,
+
+//polygon Infura mainnet
+    polygon_infura_mainnet: {
+      provider: () => new HDWalletProvider({
+        mnemonic: {
+          phrase: mnemonic
+        },
+        providerOrUrl:
+            "https://polygon-mainnet.infura.io/v3/" + infuraProjectId
+      }),
+      network_id: 137,
+      confirmations: 2,
+      timeoutBlocks: 200,
+      skipDryRun: true,
+      chainId: 137
+    },
+    //polygon Infura testnet
+    polygon_infura_testnet: {
+      provider: () => new HDWalletProvider({
+        mnemonic: {
+          phrase: mnemonic
+        },
+        providerOrUrl:
+            "https://polygon-mumbai.infura.io/v3/" + infuraProjectId
+      }),
       network_id: 80001,
       confirmations: 2,
       timeoutBlocks: 200,
-      skipDryRun: true
-    },
+      skipDryRun: true,
+      chainId: 80001
+    }
+  },
     // Useful for testing. The `development` name is special - truffle uses it by default
     // if it's defined here and no other network is specified at the command line.
     // You should run a client (like ganache-cli, geth or parity) in a separate terminal
@@ -74,25 +101,21 @@ module.exports = {
     // production: true    // Treats this network as if it was a public net. (default: false)
     // }
 
-  },
-
   // Set default mocha options here, use special reporters etc.
   mocha: {
-    // timeout: 100000
+    timeout: 120000
   },
 
   // Configure your compilers
   compilers: {
     solc: {
-      version: "0.8.9",    // Fetch exact version from solc-bin (default: truffle's version)
-      // docker: true,        // Use "0.5.1" you've installed locally with docker (default: false)
-      // settings: {          // See the solidity docs for advice about optimization and evmVersion
-      //  optimizer: {
-      //    enabled: false,
-      //    runs: 200
-      //  },
-      //  evmVersion: "byzantium"
-      // }
+      version: "0.8.11",
+      settings: {
+        optimizer: {
+          enabled: false,
+          runs: 200
+        }
+      }
     }
   },
 
