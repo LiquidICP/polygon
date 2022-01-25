@@ -22,8 +22,6 @@ contract Bridge is AccessControl, IBridge {
     IWrapperBridgedStandardERC20 public iWrapperBridgedStandardERC20;
 
     bytes32 public constant BOT_MESSANGER_ROLE = keccak256("BOT_MESSANGER_ROLE");
-    //
-    //    mapping (byte32 => address) relatedTokens;
 
     modifier onlyAdmin() {
         require(hasRole(DEFAULT_ADMIN_ROLE, _msgSender()), "onlyAdmin");
@@ -39,6 +37,7 @@ contract Bridge is AccessControl, IBridge {
         address _wrappedICP,
         address _wallerForFee,
         uint _feeRate,
+        uint8 _decimals,
         address _botMessanger,
         string memory _name,
         string memory _symbol
@@ -53,7 +52,7 @@ contract Bridge is AccessControl, IBridge {
         if (_wallerForFee != address(0)) {
             wallerForFee = _wallerForFee;
         }
-        _cloneAndInitializeTokenAtEndForTokenAtStart(_name, _symbol);
+        _cloneAndInitializeTokenAtEndForTokenAtStart(_name, _symbol, _decimals);
     }
 
     function evacuateTokens(uint256 _amount, address _to) external onlyAdmin {
@@ -87,7 +86,8 @@ contract Bridge is AccessControl, IBridge {
         address _to,
         uint256 _amount,
         string memory _name,
-        string memory _symbol
+        string memory _symbol,
+        uint8 _decimals
     )
     external
     override
@@ -97,7 +97,8 @@ contract Bridge is AccessControl, IBridge {
         if (token == address(0)) {
             token = _cloneAndInitializeTokenAtEndForTokenAtStart(
                 _name,
-                _symbol
+                _symbol,
+                _decimals
             );
         }
         iWrapperBridgedStandardERC20.mint(_to, _amount);
@@ -106,7 +107,8 @@ contract Bridge is AccessControl, IBridge {
 
     function _cloneAndInitializeTokenAtEndForTokenAtStart(
         string memory _name,
-        string memory _symbol
+        string memory _symbol,
+        uint8 _decimals
     )
     internal
     returns(address token)
@@ -116,7 +118,8 @@ contract Bridge is AccessControl, IBridge {
             address(this),
             _token,
             _name,
-            _symbol
+            _symbol,
+            _decimals
         );
         return _token;
     }

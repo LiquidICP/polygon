@@ -25,7 +25,8 @@ interface IBridge {
         address _to,
         uint256 _amount,
         string memory _name,
-        string memory _symbol
+        string memory _symbol,
+        uint8 _decimals
     ) external;
 
 }

@@ -16,6 +16,7 @@ contract WrapperBridgedStandardERC20 is IWrapperBridgedStandardERC20, ERC20, Ini
     string internal __name;
     string internal __symbol;
 
+    uint8 internal __decimals;
     uint256 public override burnt = 0;
 
     constructor() ERC20("", "") {}
@@ -35,12 +36,14 @@ contract WrapperBridgedStandardERC20 is IWrapperBridgedStandardERC20, ERC20, Ini
         address _bridge,
         address _bridgingToken,
         string memory _name,
-        string memory _symbol
+        string memory _symbol,
+        uint8 _decimals
     ) external override initializer {
         bridge = _bridge;
         bridgingToken = _bridgingToken;
         __name = _name;
         __symbol = _symbol;
+        __decimals = _decimals;
     }
 
     function name() public view override(ERC20, IWrapperBridgedStandardERC20) returns(string memory) {
@@ -49,6 +52,10 @@ contract WrapperBridgedStandardERC20 is IWrapperBridgedStandardERC20, ERC20, Ini
 
     function symbol() public view override(ERC20, IWrapperBridgedStandardERC20) returns(string memory) {
         return __symbol;
+    }
+
+    function decimals() public view override(ERC20, IWrapperBridgedStandardERC20) returns(uint8) {
+        return __decimals;
     }
 
     function _transfer(address sender, address recipient, uint256 amount) internal override {
