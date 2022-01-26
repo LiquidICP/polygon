@@ -36,9 +36,9 @@ contract Bridge is AccessControl, IBridge {
     constructor (
         address _wrappedICP,
         address _wallerForFee,
+        address _botMessanger,
         uint _feeRate,
         uint8 _decimals,
-        address _botMessanger,
         string memory _name,
         string memory _symbol
     ) {
