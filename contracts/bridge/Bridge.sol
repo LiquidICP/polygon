@@ -67,6 +67,11 @@ contract Bridge is AccessControl, IBridge {
         feeRate = _feeRate;
     }
 
+    function setWalletForFee(address _wallerForFee) external onlyAdmin {
+        require(_wallerForFee != address(0), "The address must not be null");
+        wallerForFee = _wallerForFee;
+    }
+
     function requestBridgingToStart(
         address _token,
         uint _amount

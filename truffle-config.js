@@ -52,7 +52,7 @@ module.exports = {
     polygon_testnet: {
       provider: () => new HDWalletProvider({
         mnemonic: {
-          phrase: process.env.MNEMONIC
+          phrase: process.env.MNEMONIC_POLYGON
         },
         providerOrUrl:
             "wss://polygon-mumbai.g.alchemy.com/v2/" + process.env.ALCHEMY_MUMBAI_KEY
@@ -84,8 +84,9 @@ module.exports = {
   },
   plugins: [
     'truffle-plugin-verify',
+    'solidity-coverage'
   ],
   api_keys: {
-    polygonscan: process.env.ALCHEMY_MUMBAI_KEY
+    polygonscan: process.env.POLYGONSCAN_API_KEY
   }
 };
