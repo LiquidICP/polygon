@@ -24,7 +24,6 @@ module.exports = async function (deployer, network, accounts) {
         await deployer.deploy(WrapperBridgedStandardERC20);
         await deployer.deploy(
             Bridge,
-            WrapperBridgedStandardERC20.address,
             feeWallet,
             owner,
             5,

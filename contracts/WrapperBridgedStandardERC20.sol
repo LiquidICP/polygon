@@ -10,7 +10,6 @@ import "./interfaces/IWrapperBridgedStandardERC20.sol";
 
 contract WrapperBridgedStandardERC20 is IWrapperBridgedStandardERC20, ERC20, Initializable {
 
-    address public override bridgingToken;
     address public bridge;
 
     string internal __name;
@@ -28,19 +27,16 @@ contract WrapperBridgedStandardERC20 is IWrapperBridgedStandardERC20, ERC20, Ini
 
     /**
      * @param _bridge Address of the  bridge.
-     * @param _bridgingToken Address of the corresponding token.
      * @param _name ERC20 name.
      * @param _symbol ERC20 symbol.
      */
     function configure(
         address _bridge,
-        address _bridgingToken,
         string memory _name,
         string memory _symbol,
         uint8 _decimals
     ) external override initializer {
         bridge = _bridge;
-        bridgingToken = _bridgingToken;
         __name = _name;
         __symbol = _symbol;
         __decimals = _decimals;

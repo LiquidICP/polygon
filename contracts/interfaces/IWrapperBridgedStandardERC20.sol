@@ -7,12 +7,10 @@ import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 interface IWrapperBridgedStandardERC20 is IERC20 {
     function configure(
         address _bridge,
-        address _bridgingToken,
         string memory _name,
         string memory _symbol,
         uint8 _decimals
     ) external;
-    function bridgingToken() external returns (address);
     function mint(address _to, uint256 _amount) external;
     function burn(address _from, uint256 _amount) external;
 

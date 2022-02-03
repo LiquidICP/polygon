@@ -21,29 +21,29 @@ contract Bridge is AccessControl, IBridge {
 
     IWrapperBridgedStandardERC20 public iWrapperBridgedStandardERC20;
 
-    bytes32 public constant BOT_MESSANGER_ROLE = keccak256("BOT_MESSANGER_ROLE");
+    bytes32 public constant BOT_MESSENGER_ROLE = keccak256("BOT_MESSENGER_ROLE");
 
     modifier onlyAdmin() {
         require(hasRole(DEFAULT_ADMIN_ROLE, _msgSender()), "onlyAdmin");
         _;
     }
 
-    modifier onlyMessangerBot {
-        require(hasRole(BOT_MESSANGER_ROLE, _msgSender()), "onlyMessangerBot");
+    modifier onlyMessengerBot {
+        require(hasRole(BOT_MESSENGER_ROLE, _msgSender()), "onlyMessengerBot");
         _;
     }
 
     constructor (
         address _wrappedICP,
         address _wallerForFee,
-        address _botMessanger,
+        address _botMessenger,
         uint _feeRate,
         uint8 _decimals,
         string memory _name,
         string memory _symbol
     ) {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
-        _setupRole(BOT_MESSANGER_ROLE, _botMessanger);
+        _setupRole(BOT_MESSENGER_ROLE, _botMessenger);
         feeRate = _feeRate;
 
         if (_wrappedICP != address(0)) {
@@ -73,14 +73,17 @@ contract Bridge is AccessControl, IBridge {
     }
 
     function requestBridgingToStart(
-        address _token,
         uint _amount
     ) external override {
         uint feeAmount = calcFeeAmount(_amount);
         address sender = _msgSender();
-        IWrapperBridgedStandardERC20(_token).transferFrom(sender, wallerForFee, feeAmount);
-        IWrapperBridgedStandardERC20(_token).burn(sender, _amount - feeAmount);
-        emit RequestBridgingToStart(_token, sender, _amount - feeAmount);
+        if (feeAmount == 0) {
+            revert("The amount is too small to transfer");
+        } else {
+            iWrapperBridgedStandardERC20.transferFrom(sender, wallerForFee, feeAmount);
+            iWrapperBridgedStandardERC20.burn(sender, _amount - feeAmount);
+            emit RequestBridgingToStart(address(iWrapperBridgedStandardERC20), sender, _amount - feeAmount);
+        }
     }
 
     function calcFeeAmount(uint _amount) private view returns(uint){
@@ -96,7 +99,7 @@ contract Bridge is AccessControl, IBridge {
     )
     external
     override
-    onlyMessangerBot
+    onlyMessengerBot
     {
         address token = address(iWrapperBridgedStandardERC20);
         if (token == address(0)) {
@@ -121,7 +124,6 @@ contract Bridge is AccessControl, IBridge {
         address _token = address(iWrapperBridgedStandardERC20).clone();
         IWrapperBridgedStandardERC20(_token).configure(
             address(this),
-            _token,
             _name,
             _symbol,
             _decimals

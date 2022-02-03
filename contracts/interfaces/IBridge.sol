@@ -17,7 +17,6 @@ interface IBridge {
     );
 
     function requestBridgingToStart(
-        address _token,
         uint256 _amount
     ) external;
 
