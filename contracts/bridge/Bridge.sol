@@ -5,9 +5,7 @@ import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
 import "../interfaces/IBridge.sol";
 import "../interfaces/IWrapperBridgedStandardERC20.sol";
-// добавить изменяемую комиссию
-// добавить соотношение кошельков
-// проработать взятие комиссии
+
 contract Bridge is AccessControl, IBridge {
     using SafeERC20 for IERC20;
 
@@ -18,51 +16,20 @@ contract Bridge is AccessControl, IBridge {
 
     IWrappedInternetComputerToken public iWrappedInternetComputerToken;
 
-    mapping(address => bool) public allowedTokens;
-
-//    bytes32 public constant ICP_ADDRESS = "";
-//
-//    mapping (byte32 => address) relatedTokens;
+    uint public commission;
 
     modifier onlyAdmin() {
         require(hasRole(DEFAULT_ADMIN_ROLE, _msgSender()), "onlyAdmin");
         _;
     }
 
-    modifier onlyMessangerBot {
-        require(hasRole(BOT_MESSANGER_ROLE, _msgSender()), "onlyMessangerBot");
-        _;
-    }
-
-    modifier tokenIsAllowed(address _token) {
-        require(allowedTokens[_token], "invalidToken");
-        _;
-    }
-
-    constructor (
-        address _wrappedICP,
-        address _wallerForBurning,
-        uint _feeRate, address _botMessanger,
-        address _allowedToken,
-        string memory _name,
-        string memory _symbol
-    ) {
+    constructor (address _wrappedICP, address _wallerForBurning, uint _feeRate) {
+        require(wallerForBurning != address(0), "The wallet address must not be 0 or empty");
+        require(_wrapperICP != address(0), "The token address must not be 0 or empty");
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
-        _setupRole(BOT_MESSANGER_ROLE, _botMessanger);
         feeRate = _feeRate;
-
-        if (_wrappedICP != address(0)) {
-            iWrappedInternetComputerToken = IWrapperBridgedStandardERC20(_wrappedICP);
-        }
-        if (_wallerForBurning != address(0)) {
-            wallerForBurning = _wallerForBurning;
-        }
-        _cloneAndInitializeTokenAtEndForTokenAtStart(_allowedToken, _name, _symbol);
-    }
-
-    function evacuateTokens(address _token, uint256 _amount, address _to) external onlyAdmin {
-        require(!allowedTokens[_token], "cannotEvacuateAllowedToken");
-        IERC20(_token).safeTransfer(_to, _amount);
+        wallerForBurning = _wallerForBurning;
+        iWrappedInternetComputerToken = IWrappedInternetComputerToken(_wrappedICP);
     }
 
     function setAdmin(address _newAdmin) external onlyAdmin {
@@ -73,17 +40,12 @@ contract Bridge is AccessControl, IBridge {
         feeRate = _feeRate;
     }
 
-    function requestBridgingToStart(
-        address _tokenAtStart,
-        address _tokenAtEnd,
-        address _to,
-        uint _amount
-    ) external override onlyAtEnd tokenIsAllowed(_tokenAtEnd) {
+    function forwardTokensFromPolygonToDfinity(uint _amount, bytes32 _address) external {
         uint feeAmount = calcFeeAmount(_amount);
         address sender = _msgSender();
-        iWrappedInternetComputerToken(_tokenAtEnd).safeTransferFrom(sender, address(this), feeAmount);
+        iWrappedInternetComputerToken.safeTransferFrom(sender, address(this), feeAmount);
         iWrappedInternetComputerToken.burn(sender, _wallerForBurning, _amount - feeAmount);
-        emit RequestBridgingToStart(_tokenAtStart, _tokenAtEnd, sender, _to, _amount - feeAmount);
+        emit ForwardTokensFromPolygonToDfinity(_wallerForBurning, _amount - feeAmount);
     }
 
     function calcFeeAmount(uint _amount) private pure returns(uint){
@@ -113,5 +75,4 @@ contract Bridge is AccessControl, IBridge {
         iWrappedInternetComputerToken(tokenAtEnd).mint(_to, _amount);
         emit BridgingToEndPerformed(_tokenAtStart, tokenAtEnd, _to, _amount);
     }
-
 }
