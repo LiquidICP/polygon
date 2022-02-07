@@ -12,6 +12,15 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@openzeppelin/contracts": "^4.4.0"
+    "@openzeppelin/contracts": "^4.4.0",
+    "@openzeppelin/test-helpers": "^0.5.15",
+    "@truffle/hdwallet-provider": "^2.0.1",
+    "dotenv": "^14.2.0",
+    "node-ipc": "^10.1.0",
+    "solidity-coverage": "^0.6.7",
+    "truffle-flattener": "^1.5.0"
+  },
+  "devDependencies": {
+    "truffle-plugin-verify": "^0.5.21"
   }
 }
