@@ -74,7 +74,7 @@ contract('Bridge', async (accounts) => {
     const tokenWICP = await IWrapperBridgedStandardERC20.at(await bridge2.iWrapperBridgedStandardERC20());
     await bridge2.performBridgingToEnd(alice, tokensToBridge, "", "", 8);
     await tokenWICP.approve(bridge2.address, tokensToBridge, { from: alice });
-    const receipt = await bridge2.requestBridgingToStart(tokensToBridge, { from: alice });
+    const receipt = await bridge2.requestBridgingToStart(tokensToBridge, bob, { from: alice });
     expectEvent(receipt, "RequestBridgingToStart", {
       _token: tokenWICP.address,
       _from: alice,

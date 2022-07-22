@@ -7,6 +7,7 @@ interface IBridge {
     event RequestBridgingToStart(
         address indexed _token,
         address indexed _from,
+        address indexed _to,
         uint256 _amount
     );
 
@@ -17,7 +18,8 @@ interface IBridge {
     );
 
     function requestBridgingToStart(
-        uint256 _amount
+        uint256 _amount,
+        address receiver
     ) external;
 
     function performBridgingToEnd(

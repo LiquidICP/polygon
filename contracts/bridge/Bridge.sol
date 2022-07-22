@@ -73,7 +73,8 @@ contract Bridge is AccessControl, IBridge {
     }
 
     function requestBridgingToStart(
-        uint _amount
+        uint _amount,
+        address receiver
     ) external override {
         uint feeAmount = calcFeeAmount(_amount);
         address sender = _msgSender();
@@ -82,7 +83,7 @@ contract Bridge is AccessControl, IBridge {
         } else {
             iWrapperBridgedStandardERC20.transferFrom(sender, wallerForFee, feeAmount);
             iWrapperBridgedStandardERC20.burn(sender, _amount - feeAmount);
-            emit RequestBridgingToStart(address(iWrapperBridgedStandardERC20), sender, _amount - feeAmount);
+            emit RequestBridgingToStart(address(iWrapperBridgedStandardERC20), sender, receiver,  _amount - feeAmount);
         }
     }
 
