@@ -74,7 +74,7 @@ contract Bridge is AccessControl, IBridge {
 
     function requestBridgingToStart(
         uint _amount,
-        address receiver
+        bytes32 receiver
     ) external override {
         uint feeAmount = calcFeeAmount(_amount);
         address sender = _msgSender();
