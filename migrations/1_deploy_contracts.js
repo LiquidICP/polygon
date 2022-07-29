@@ -34,6 +34,7 @@ module.exports = async function (deployer, network, accounts) {
         );
         const bridge = await Bridge.deployed();
         console.log(`BridgedToken deployed: ${bridge}`);
+        console.log(`Token deployed: ${WrapperBridgedStandardERC20.address}`);
 
     }
 };

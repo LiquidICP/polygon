@@ -33,7 +33,6 @@ module.exports = {
     development: ganacheConfig,
     polygon_testnet_fork: ganacheConfig,
 
-//polygon Infura mainnet
     polygon_mainnet: {
       provider: () => new HDWalletProvider({
         mnemonic: {
