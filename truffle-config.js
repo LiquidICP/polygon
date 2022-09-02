@@ -39,7 +39,7 @@ module.exports = {
           phrase: process.env.MNEMONIC
         },
         providerOrUrl:
-            "wss://polygon-mumbai.g.alchemy.com/v2/" + polygonscan
+            "wss://polygon-mumbai.g.alchemy.com/v2/" + process.env.ALCHEMY_MAINNET_KEY
       }),
       network_id: 137,
       confirmations: 2,

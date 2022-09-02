@@ -33,8 +33,39 @@ module.exports = async function (deployer, network, accounts) {
             "WICP"
         );
         const bridge = await Bridge.deployed();
+        const token = await WrapperBridgedStandardERC20.deployed();
+        await token.configure(
+            bridge.address,
+            "WrapperICP",
+            "WCIP",
+            8
+        );
         console.log(`BridgedToken deployed: ${bridge}`);
         console.log(`Token deployed: ${WrapperBridgedStandardERC20.address}`);
 
     }
-};
+    if (network === "polygon_mainnet") {
+        console.log("Deployer address: " + deployer);
+        await deployer.deploy(WrapperBridgedStandardERC20);
+        await deployer.deploy(
+            Bridge,
+            WrapperBridgedStandardERC20.address,
+            feeWallet,
+            owner,
+            5,
+            8,
+            "WrapperICP",
+            "WICP"
+        );
+        const bridge = await Bridge.deployed();
+        const token = await WrapperBridgedStandardERC20.deployed();
+        await token.configure(
+            bridge.address,
+            "WrapperICP",
+            "WCIP",
+            8
+        );
+        console.log(`BridgedToken deployed: ${bridge}`);
+        console.log(`Token deployed: ${WrapperBridgedStandardERC20.address}`);
+    }
+    };
